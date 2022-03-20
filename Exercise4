@@ -1,0 +1,126 @@
+//Part1
+
+from time import sleep
+from enum import Enum
+from os import system
+from gpiozero import Motor, Button
+
+ms = Motor(forward=23, backward=24)
+cs = 0
+
+PushButton = Button(14, bounce_time=0.1)
+
+
+class FSMStates(Enum):
+    S0 = 1
+    S1 = 2
+    S2 = 3
+    S3 = 4
+
+
+current = FSMStates.S0
+
+
+def PBPressed():
+    print("Push Button")
+    global currentz
+    global countz
+    if currentz == FSMStates.S0:
+        currentz = FSMStates.S1
+    elif currentz == FSMStates.S1:
+        currentz = FSMStates.S2
+    elif currentz == FSMStates.S2:
+        currentz = FSMStates.S3
+
+
+PushButton.when_pressed = PBPressed
+
+while True:
+    if current == FSMStates.S0:
+        Motor.stop()
+        print("Counter each: ", cs)
+        print("Motor Speed 0: ", ms)
+
+    if current == FSMStates.S1:
+        count = cs + 1
+        ms.forward(0.50)
+        print("Motor Speed 1: ", ms)
+
+    if current == FSMStates.S2:
+        count = cs + 1
+        ms.forward(0.75)
+        print("Motor Speed 2: ", ms)
+
+    if current == FSMStates.S3:
+        count = cs + 1
+        ms.forward(1)
+        sleep(5)
+        current = FSMStates.S0
+        print("Motor Speed 3: ", ms)
+        
+        
+//Part2
+
+from time import sleep
+from enum import Enum
+from os import system
+
+
+class FSMStates(Enum):
+    S0 = 1
+    S1 = 2
+    S2 = 3
+    S3 = 4
+
+
+currentS = FSMStates.S0
+
+
+def StateT():
+    global currentS
+    if currentS == FSMStates.S0:
+        currentS = FSMStates.S1
+    elif currentS == FSMStates.S1:
+        currentS = FSMStates.S2
+    elif currentS == FSMStates.S2:
+        currentS = FSMStates.S3
+
+
+while True:
+    if currentS == FSMStates.S0:
+        DC = 0
+        Stepper = 0
+        ServoMotor = 0
+        print("DC Output: ", DC)
+        print("Stepper Output: ", Stepper)
+        print("Servo Output: ", ServoMotor)
+        print("Current Output: ", currentS)
+
+    a = input("Enter any PushButton control: ")
+    if a == '1':
+        StateT()
+
+    if currentS == FSMStates.S1:
+        print("Current Out: ", currentS)
+        DC = 50
+        print("DC Out: ", DC)
+        print("Stepper Out: ", Stepper)
+        print("Servo Out: ", ServoMotor)
+        sleep(5)
+        currentState = FSMStates.S2
+
+    if currentS == FSMStates.S2:
+        Servo = 90
+        print("Current Out: ", currentS)
+        print("DC Out: ", DC)
+        print("Stepper Out: ", Stepper)
+        print("Servo Out: ", ServoMotor)
+
+    if currentS == FSMStates.S3:
+        Stepper = 40
+        print("Current Out: ", currentS)
+        print("DC Out: ", DC)
+        print("Stepper Out: ", Stepper)
+        print("Servo Out: ", ServoMotor)
+        sleep(1)
+        currentState = FSMStates.S0
