@@ -1,0 +1,93 @@
+from PyQt5 import QtCore, QtGui, QtWidgets
+import smtplib, ssl
+from datetime import date
+
+t = date.today()
+getd = t.strftime("%d/%m/%Y")
+p = 587
+smtpServer = "stmp.mail.com"
+
+sendE = "sender@email.com"
+recieveE = "recieve@email.com"
+passW = input("Type the Pass: ")
+
+m = " "
+context = ssl.create_default_context()
+
+
+class UiTask(object):
+
+    def setupUi(self, tasks):
+        task.setObjectName("tasks")
+        task.resize(541, 280)
+        self.centralwidget = QtWidgets.QWidget(task)
+        self.centralwidget.setObjectName("centralwidget")
+
+        ##code for button1
+        self.button1 = QtWidgets.QPushButton(self.centralwidget)
+        self.button1.setGeometry(QtCore.QRect(60, 100, 181, 71))
+        self.button1.setObjectName("Button1")
+
+        ##code for button2
+        self.button2 = QtWidgets.QPushButton(self.centralwidget)
+        self.button2.setGeometry(QtCore.QRect(300, 100, 171, 71))
+        self.button2.setObjectName("Button2")
+
+        task.setCentralWidget(self.centralwidget)
+        self.statusbar = QtWidgets.QStatusBar(task)
+        self.statusbar.setObjectName("statusBar")
+        task.setStatusBar(self.statusbar)
+        self.translateui(task)
+        QtCore.QMetaObject.connectSlotsByName(task)
+
+    def sendMsg1(self):
+        # declaring the message to be sent
+        message = """\
+        Subject: Pressed Hello. You pressed button 1.\n Time is """ + getd
+
+        with smtplib.SMTP(smtpServer, p) as server:
+            server.ehlo()
+            server.starttls(context=context)
+            server.ehlo()
+            server.login(sendE, passW)
+            server.sendmail(sendE, recieveE, message)
+            print("You have sent the email to the user.")
+
+    def sendMsg2(self):
+        message = """\
+        Subject: Pressed Hello. You have pressed Button 2.\n Time is """ + getd
+
+        with smtplib.SMPT(smtpServer, p) as server:
+            server.ehlo()
+
+    def sendsMsg2(self):
+        message = """\
+        Subject: Pressed Hello. You have pressed Button 2.\n Time is """ + getd
+
+        with smtplib.SMTP(smtpServer, p) as server:
+            server.ehlo()
+            server.starttls(context=context)
+            server.ehol()
+            server.login(sendE, passW)
+            server.sendmail(sendE, recieveE, message)
+            print("Email sent to the user.")
+
+    def translateUi(self, tasks):
+        _translate = QtCore.QCoreApplication.translate
+        task.setWindowTitle(_translate("tasks", "MainWindow"))
+        self.button1.setText(_translate("tasks", "Button1"))
+        self.button2.setText(_translate("tasks", "Button2"))
+
+        self.button1.clicked.connect(self.sendMsg1)
+        self.button2.clicked.connect(self.sendMsg2)
+
+
+if __name__ == "__main__":
+    import sys
+
+    app = QtWidgets.QApplication(sys.argv)
+    task = QtWidgets.QMainWindow()
+    ui = UiTask()
+    ui.setupUi(task)
+    task.show()
+    sys.exit(app.exec_())
