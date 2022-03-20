@@ -1,0 +1,23 @@
+x = int(input("Number of elements: "))
+
+choose = int(
+    input("Choose which number you want the list to be after removing the Duplicates\n 0 for same order \n "
+          "1 for sorted order: "))
+
+lists = list(map(int, input("\nEnter the numbers: ").strip().split()))[:x]
+
+print("Original List: " + str(lists))
+
+numbers = []
+for i in lists:
+    if i not in numbers:
+        numbers.append(i)
+
+elementsRemoved = len(lists) - len(numbers)
+print("Duplicates removed from the list: ", elementsRemoved)
+
+if choose == 0:
+    print("List after removing duplicates: " + str(numbers))
+else:
+    numbers.sort()
+    print("Sorted list: ", numbers)
