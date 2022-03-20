@@ -1,0 +1,74 @@
+from gpiozero import LED , DistanceSensor
+from time import sleep
+
+sensor = DistanceSensor(echo=18, trigger=17)
+
+RLED = LED(16)
+YLED = LED(14)
+GLED = LED(15)
+
+State = "Idle"
+
+def get_distance():
+    cm = sensor.distance * 100
+    return cm
+
+while True:
+    if State == "Idle":
+        RLED.off()
+        GLED.off()
+        YLED.off()
+        d=get_distance()
+        if d>5 and d<15:
+            State = "Close"
+            print("Close1")
+        if d>25 and d<30:
+            State = "Far"
+            print("Far1")
+        if d>15 and d<25:
+            State = "Near"
+            print("Near1")
+    elif State == "Close":
+        RLED.on()
+        GLED.on()
+        YLED.on()
+        d=get_distance()
+        if d>30:
+            State = "Idle"
+            print("Idle2")
+        if d>15 and d<25:
+            State = "Near"
+            print("Near2")
+        if d>25 and d<30:
+            State = "Far"
+            print("Far2")
+
+    elif State == "Near":
+        RLED.off()
+        GLED.on()
+        YLED.on()
+        d=get_distance()
+        if d>30:
+            State = "Idle"
+            print("Idle3")
+        if d>5 and d<15:
+            State = "Close"
+            print("Close3")
+        if d>15 and d<25:
+            State = "Far"
+            print("Far3")
+
+    elif State == "Far":
+        RLED.off()
+        GLED.off()
+        YLED.on()
+        d=get_distance()
+        if d>30:
+            State = "Idle"
+            print("Idle4")
+        if d>5 and d<15:
+            State = "Close"
+            print("Close4")
+        if d>15 and d<25:
+            State = "Near"
+            print("Near4")
